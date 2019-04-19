@@ -1,0 +1,104 @@
+package com.lujian.game.front.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.lujian.game.common.ValidateController;
+import com.lujian.game.dto.ProductInfoType;
+import com.lujian.game.front.service.BuyerInfoService;
+import com.lujian.game.front.service.ProductInfoService;
+import com.lujian.game.front.service.ProductTypeService;
+import com.lujian.game.model.BuyerInfo;
+import com.lujian.game.model.ProductInfo;
+import com.lujian.game.model.ProductType;
+
+@Controller
+@RequestMapping("/front")
+public class LoginController {
+	
+	@Autowired
+	private BuyerInfoService buyerInfoService;
+	@Autowired
+	private ProductTypeService productTypeSrevice;
+	@Autowired
+	private ProductInfoService productInfoService;
+	/*
+	 * 登录的controller
+	 */
+	@RequestMapping("/toReg")
+	public String toReg( ) {
+		
+		return "/front/register";
+	}
+	@RequestMapping("/toLogin")
+	public String toLogin( ) {
+		
+		return "/front/login";
+	}
+	
+	@RequestMapping("/login")
+	public String reg(@RequestParam String name,@RequestParam String pwd,@RequestParam String vcode,HttpServletRequest request,HttpSession session) {
+		/*zhang
+		 * 用户登录判断
+		 *  2.验证码是否正确
+		 */
+		//服务器的验证码
+		String serverVcode=(String) session.getAttribute(ValidateController.SERVER_VCODE);
+		System.out.println(serverVcode);
+		//验证码是否正确
+		System.out.println(vcode);
+		if(!vcode.equalsIgnoreCase(serverVcode)) {
+			request.setAttribute("msg", "验证码不正确");
+			request.setAttribute("name", name);
+			return "/front/login";
+		}
+		//System.out.println("++++++++++++++++++++++++");
+		//登录验证
+	    BuyerInfo buyer=buyerInfoService.find(name,pwd);
+	    System.out.println(buyer);
+	    if(buyer!=null)
+	    {
+	    	//登陆成功到主界面
+	    	session.setAttribute("buyer",buyer);//登录成功，记录在session
+	    	session.setAttribute("carts", new ArrayList<>());
+	    	List<ProductType> productTypes = productTypeSrevice.findProductTypes();
+	        List<ProductInfoType>ls=new ArrayList<>();
+	    	for (ProductType productType : productTypes) {
+				Integer id = productType.getId();
+				String typeName=productType.getTypeName();
+				//Page<ProductInfo> findAllProductInfos = productInfoService.findAllProductInfos(1,"", id, "", -1);
+				List<ProductInfo> findAllProductInfos=productInfoService.findProductInfosByType(id);
+				ProductInfoType infoType=new ProductInfoType();
+				infoType.setId(id);
+				infoType.setTypeName(typeName);
+				infoType.setSize(findAllProductInfos.size());
+				infoType.setProductInfos(findAllProductInfos);
+				ls.add(infoType);
+				
+			}
+	    	session.setAttribute("productInfoTypes", ls);
+	    	return "redirect:/front/toMain";
+	    }else {
+	    	request.setAttribute("msg","用户名或者密码错误");
+	    	request.setAttribute("name", name);
+	    	return "/front/login";
+	    }
+	}
+	@RequestMapping("/exit")
+	public String exit(@RequestParam String name,HttpServletRequest request,HttpSession session) {
+		
+		session.removeAttribute(name);
+		return "redirect:/front/toLogin";
+	}
+	
+	
+}

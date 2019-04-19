@@ -4,13 +4,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>cn.edu.nyist</groupId>
-	<artifactId>springboot_food</artifactId>
+	<groupId>com.lujian.game</groupId>
+	<artifactId>lujian_game</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>springboot_food</name>
-	<description>weixindiancan</description>
+	<name>lujian_game</name>
+	<description>lujian</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -101,6 +101,16 @@
 			<version>1.2</version>
 		</dependency>
 		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+		<!-- alipay SDK -->
+		<dependency>
+			<groupId>com.alipay.sdk</groupId>
+			<artifactId>alipay-sdk-java</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.2.44</version>
@@ -118,48 +128,35 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 	</dependencies>
-<build>
-        <defaultGoal>compile</defaultGoal>
-        <sourceDirectory>src</sourceDirectory>
-        <finalName>springboot-package</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin </artifactId>
-                <configuration>
-                    <fork>true</fork>
-                    <mainClass>cn.edu.nyist.food.SpringbootFoodApplication</mainClass>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+	<build>
+		<defaultGoal>compile</defaultGoal>
 
-
-	<!-- <build>
-		<plugins> 使用spring boot的maven插件进行打包
+		<finalName>springboot-package</finalName>
+		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<artifactId>spring-boot-maven-plugin </artifactId>
+				<configuration>
+					<fork>true</fork>
+					<mainClass>cn.edu.nyist.food.SpringbootFoodApplication</mainClass>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
-							<goal>build-info</goal>
+							<goal>repackage</goal>
 						</goals>
 					</execution>
 				</executions>
-				<configuration> 是否打出可执行的jar包(仅支持Linux格式)
-					<executable>true</executable>
-				</configuration>
 			</plugin>
 		</plugins>
-	</build> -->
+	</build>
+
+
+	<!-- <build> <plugins> 使用spring boot的maven插件进行打包 <plugin> <groupId>org.springframework.boot</groupId> 
+		<artifactId>spring-boot-maven-plugin</artifactId> <executions> <execution> 
+		<goals> <goal>build-info</goal> </goals> </execution> </executions> <configuration> 
+		是否打出可执行的jar包(仅支持Linux格式) <executable>true</executable> </configuration> </plugin> 
+		</plugins> </build> -->
 
 
 
